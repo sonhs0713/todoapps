@@ -38,7 +38,24 @@
 
     <footer class="footer">
       <span id="count" class="footer-count">총 0개</span>
+      <button type="button" id="settings-btn" class="settings-btn" title="Firebase 설정">Firebase 설정</button>
     </footer>
+  </div>
+
+  <div id="firebase-modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-content">
+      <h2 id="modal-title" class="modal-title">Firebase API 키</h2>
+      <p class="modal-desc">Firebase 콘솔에서 발급한 API 키를 입력하세요. 저장 시 다음부터 적용됩니다.</p>
+      <form id="firebase-form" class="firebase-form">
+        <label for="firebase-apikey" class="firebase-label">API Key</label>
+        <input type="password" id="firebase-apikey" class="firebase-input" placeholder="AIzaSy..." autocomplete="off">
+        <div class="modal-actions">
+          <button type="button" id="modal-close" class="btn-cancel">취소</button>
+          <button type="submit" class="btn-save-modal">저장</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script type="module" src="main.js"></script>

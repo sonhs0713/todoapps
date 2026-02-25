@@ -11,9 +11,11 @@ import {
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
 
-// Firebase 연결 설정 (Realtime Database용 databaseURL 필요)
+// Firebase 연결 설정 — API 키는 localStorage 또는 아래 기본값 사용
+const FIREBASE_APIKEY_STORAGE = "todoapp-firebase-apikey";
+const defaultApiKey = "AIzaSyA7ly9MsxfFAA2B2oovur3e61leUMUq1qc";
 const firebaseConfig = {
-  apiKey: "AIzaSyA7ly9MsxfFAA2B2oovur3e61leUMUq1qc",
+  apiKey: localStorage.getItem(FIREBASE_APIKEY_STORAGE) || defaultApiKey,
   authDomain: "todoapp-400bd.firebaseapp.com",
   projectId: "todoapp-400bd",
   storageBucket: "todoapp-400bd.firebasestorage.app",
@@ -231,3 +233,48 @@ form.addEventListener("submit", function (e) {
   e.preventDefault();
   addTodo(input.value);
 });
+
+// ---- Firebase API 키 설정 모달 ----
+const modal = document.getElementById("firebase-modal");
+const settingsBtn = document.getElementById("settings-btn");
+const modalBackdrop = document.getElementById("modal-backdrop");
+const modalClose = document.getElementById("modal-close");
+const firebaseForm = document.getElementById("firebase-form");
+const firebaseApikeyInput = document.getElementById("firebase-apikey");
+
+function openFirebaseModal() {
+  firebaseApikeyInput.value = localStorage.getItem(FIREBASE_APIKEY_STORAGE) || "";
+  modal.classList.add("is-open");
+  modal.setAttribute("aria-hidden", "false");
+  firebaseApikeyInput.focus();
+}
+
+function closeFirebaseModal() {
+  modal.classList.remove("is-open");
+  modal.setAttribute("aria-hidden", "true");
+}
+
+if (settingsBtn) {
+  settingsBtn.addEventListener("click", openFirebaseModal);
+}
+if (modalBackdrop) {
+  modalBackdrop.addEventListener("click", closeFirebaseModal);
+}
+if (modalClose) {
+  modalClose.addEventListener("click", closeFirebaseModal);
+}
+if (firebaseForm) {
+  firebaseForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const key = firebaseApikeyInput.value.trim();
+    if (key) {
+      localStorage.setItem(FIREBASE_APIKEY_STORAGE, key);
+      closeFirebaseModal();
+      alert("Firebase API 키가 저장되었습니다. 새로고침하면 적용됩니다.");
+    } else {
+      localStorage.removeItem(FIREBASE_APIKEY_STORAGE);
+      closeFirebaseModal();
+      alert("저장된 API 키를 삭제했습니다. 기본값이 사용됩니다. 새로고침하면 적용됩니다.");
+    }
+  });
+}
