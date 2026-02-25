@@ -1,0 +1,393 @@
+/* ============================================
+   LIST — Awwwards-inspired Todo
+   Typography-led, editorial, warm neutral
+   ============================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0d0c0b;
+  --bg-elevated: #161412;
+  --surface: #1c1a18;
+  --surface-hover: #252220;
+  --text: #f5f0ea;
+  --text-muted: #8c857d;
+  --text-soft: #5c5650;
+  --accent: #c4a574;
+  --accent-hover: #d4b886;
+  --accent-subtle: rgba(196, 165, 116, 0.12);
+  --danger: #c47c74;
+  --danger-hover: #d4928a;
+  --success: #7cb87c;
+  --border: rgba(255, 255, 255, 0.06);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font-display: "Syne", sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+html {
+  font-size: clamp(15px, 2vw, 17px);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* ---- Ambient background ---- */
+.noise {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.gradient-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.2;
+  will-change: transform;
+}
+.gradient-orb--1 {
+  width: 60vmin;
+  height: 60vmin;
+  background: var(--accent);
+  top: -20vmin;
+  right: -10vmin;
+  animation: float 18s var(--ease-in-out) infinite;
+}
+.gradient-orb--2 {
+  width: 40vmin;
+  height: 40vmin;
+  background: #6b7fc4;
+  bottom: -10vmin;
+  left: -5vmin;
+  animation: float 14s var(--ease-in-out) infinite reverse;
+}
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-3%, -5%) scale(1.05); }
+}
+
+/* ---- App shell ---- */
+.app {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 4vw, 2rem);
+}
+
+/* ---- Header ---- */
+.header {
+  margin-bottom: clamp(2rem, 6vw, 3.5rem);
+}
+
+.header-label {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.header-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 12vw, 5.5rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.header-desc {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+
+/* ---- Add form ---- */
+.add-form {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+#todo-input {
+  flex: 1;
+  min-width: 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.25s var(--ease-out-expo), box-shadow 0.25s var(--ease-out-expo), background 0.25s;
+}
+
+#todo-input::placeholder {
+  color: var(--text-soft);
+}
+
+#todo-input:hover {
+  background: var(--surface-hover);
+}
+
+#todo-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+#add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease-out-expo), background 0.2s, box-shadow 0.2s;
+}
+
+#add-btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(196, 165, 116, 0.25);
+}
+
+#add-btn:active {
+  transform: translateY(0);
+}
+
+#add-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-icon {
+  opacity: 0.8;
+  transition: transform 0.2s var(--ease-out-expo);
+}
+
+#add-btn:hover .btn-icon {
+  transform: translateX(2px);
+}
+
+/* ---- Main / List ---- */
+.main {
+  flex: 1;
+}
+
+.todo-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color 0.2s, background 0.2s, transform 0.25s var(--ease-out-expo), opacity 0.25s;
+  animation: itemIn 0.5s var(--ease-out-expo) backwards;
+}
+
+.todo-item:nth-child(1) { animation-delay: 0.02s; }
+.todo-item:nth-child(2) { animation-delay: 0.06s; }
+.todo-item:nth-child(3) { animation-delay: 0.1s; }
+.todo-item:nth-child(4) { animation-delay: 0.14s; }
+.todo-item:nth-child(5) { animation-delay: 0.18s; }
+.todo-item:nth-child(6) { animation-delay: 0.22s; }
+.todo-item:nth-child(7) { animation-delay: 0.26s; }
+.todo-item:nth-child(8) { animation-delay: 0.3s; }
+.todo-item:nth-child(9) { animation-delay: 0.34s; }
+.todo-item:nth-child(10) { animation-delay: 0.38s; }
+.todo-item:nth-child(n+11) { animation-delay: 0.42s; }
+
+@keyframes itemIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.todo-item:hover {
+  background: var(--surface-hover);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.todo-item.done .todo-text {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.todo-text {
+  flex: 1;
+  word-break: break-word;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.todo-item input.edit-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  outline: none;
+}
+
+.todo-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.todo-actions button {
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: transform 0.15s var(--ease-out-expo), background 0.2s, color 0.2s;
+}
+
+.todo-actions button:hover {
+  transform: scale(1.03);
+}
+
+.btn-edit {
+  background: var(--accent-subtle);
+  color: var(--accent);
+}
+
+.btn-edit:hover {
+  background: rgba(196, 165, 116, 0.2);
+}
+
+.btn-save {
+  background: rgba(124, 184, 124, 0.2);
+  color: var(--success);
+}
+
+.btn-save:hover {
+  background: rgba(124, 184, 124, 0.35);
+}
+
+.btn-cancel {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+}
+
+.btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+}
+
+.btn-delete {
+  background: rgba(196, 124, 116, 0.2);
+  color: var(--danger);
+}
+
+.btn-delete:hover {
+  background: var(--danger);
+  color: var(--bg);
+}
+
+/* ---- Empty state ---- */
+.empty-message {
+  text-align: center;
+  padding: clamp(2.5rem, 8vw, 4rem) 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.empty-message-line {
+  display: block;
+  font-size: 1rem;
+  color: var(--text-soft);
+  font-weight: 500;
+}
+
+.empty-message.hidden {
+  display: none;
+}
+
+/* ---- Footer ---- */
+.footer {
+  margin-top: auto;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.footer-count {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .gradient-orb,
+  .todo-item,
+  .todo-actions button,
+  #add-btn {
+    animation: none;
+    transition: none;
+  }
+  .gradient-orb--1,
+  .gradient-orb--2 {
+    animation: none;
+  }
+}

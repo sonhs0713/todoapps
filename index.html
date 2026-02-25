@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LIST — 할일을 담는 공간</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="gradient-orb gradient-orb--1" aria-hidden="true"></div>
+  <div class="gradient-orb gradient-orb--2" aria-hidden="true"></div>
+
+  <div class="app">
+    <header class="header">
+      <p class="header-label">Task Manager</p>
+      <h1 class="header-title">LIST</h1>
+      <p class="header-desc">할일을 담는 공간</p>
+      <form id="todo-form" class="add-form">
+        <input type="text" id="todo-input" placeholder="무엇을 할까요?" autocomplete="off" maxlength="100">
+        <button type="submit" id="add-btn">
+          <span class="btn-text">추가</span>
+          <span class="btn-icon" aria-hidden="true">→</span>
+        </button>
+      </form>
+    </header>
+
+    <main class="main">
+      <ul id="todo-list" class="todo-list"></ul>
+      <p id="empty-message" class="empty-message">
+        <span class="empty-message-line">아직 할일이 없어요.</span>
+        <span class="empty-message-line">위에서 새로 추가해 보세요.</span>
+      </p>
+    </main>
+
+    <footer class="footer">
+      <span id="count" class="footer-count">총 0개</span>
+    </footer>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
