@@ -15,47 +15,122 @@
   <div class="gradient-orb gradient-orb--2" aria-hidden="true"></div>
 
   <div class="app">
+    <canvas id="confetti-canvas" class="confetti-canvas" aria-hidden="true"></canvas>
+
     <header class="header">
       <p class="header-label">Task Manager</p>
       <h1 class="header-title">LIST</h1>
       <p class="header-desc">할일을 담는 공간</p>
+
       <form id="todo-form" class="add-form">
-        <input type="text" id="todo-input" placeholder="무엇을 할까요?" autocomplete="off" maxlength="100">
-        <button type="submit" id="add-btn">
-          <span class="btn-text">추가</span>
-          <span class="btn-icon" aria-hidden="true">→</span>
-        </button>
+        <div class="add-form-row">
+          <input
+            type="text"
+            id="todo-input"
+            placeholder="지금 가장 먼저 해야 할 일은?"
+            autocomplete="off"
+            maxlength="100"
+          >
+          <button type="submit" id="add-btn">
+            <span class="btn-text">추가</span>
+            <span class="btn-icon" aria-hidden="true">→</span>
+          </button>
+        </div>
+        <div class="add-form-meta">
+          <div class="field-group">
+            <label for="todo-category" class="field-label">카테고리</label>
+            <select id="todo-category" class="field-select">
+              <option value="공부">공부</option>
+              <option value="운동">운동</option>
+              <option value="일상">일상</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+          <label class="focus-toggle">
+            <input type="checkbox" id="focus-toggle">
+            <span class="focus-toggle-label">오늘 내가 집중해야 할 단 하나의 일로 설정</span>
+          </label>
+        </div>
       </form>
     </header>
 
     <main class="main">
-      <ul id="todo-list" class="todo-list"></ul>
-      <p id="empty-message" class="empty-message">
-        <span class="empty-message-line">아직 할일이 없어요.</span>
-        <span class="empty-message-line">위에서 새로 추가해 보세요.</span>
-      </p>
+      <section class="focus-section" aria-labelledby="focus-heading">
+        <div class="focus-header-row">
+          <p id="focus-heading" class="focus-label">오늘 내가 집중해야 할 단 하나의 일</p>
+          <span class="focus-pill" aria-hidden="true">Today</span>
+        </div>
+        <div id="focus-card" class="focus-card focus-card--empty">
+          <p class="focus-empty-main">아직 오늘의 집중할 일을 선택하지 않았어요.</p>
+          <p class="focus-empty-sub">위에서 체크박스를 선택해 오늘의 단 하나의 일을 지정해 보세요.</p>
+        </div>
+      </section>
+
+      <section class="category-section">
+        <div class="category-header">
+          <p class="category-title">카테고리별 할 일</p>
+          <p class="category-subtitle">카테고리마다 카드가 가로로 이어지는 보드를 만들었어요.</p>
+        </div>
+        <div id="category-rows" class="category-rows"></div>
+
+        <p id="empty-message" class="empty-message">
+          <span class="empty-message-line">아직 할일이 없어요.</span>
+          <span class="empty-message-line">위에서 새로 추가해 보세요.</span>
+        </p>
+      </section>
+
+      <section class="reward-section" aria-labelledby="reward-heading">
+        <div class="reward-header">
+          <p id="reward-heading" class="reward-label">오늘의 휴식 보상</p>
+          <p class="reward-subtitle">할 일을 마친 당신에게, 지금 상영 중인 영화로 작은 휴식을 선물할게요.</p>
+        </div>
+        <div id="reward-movies" class="reward-movies reward-movies--loading">
+          <p class="reward-loading">영화 정보를 불러오는 중입니다...</p>
+        </div>
+        <p id="reward-error" class="reward-error" aria-live="polite"></p>
+      </section>
     </main>
 
     <footer class="footer">
-      <span id="count" class="footer-count">총 0개</span>
-      <button type="button" id="settings-btn" class="settings-btn" title="Firebase 설정">Firebase 설정</button>
+      <div class="footer-left">
+        <span id="count" class="footer-count">총 0개</span>
+
+        <div class="progress">
+          <div class="progress-label-row">
+            <span class="progress-label">오늘의 진행률</span>
+            <span id="progress-percent" class="progress-percent">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div id="progress-fill" class="progress-bar-fill"></div>
+          </div>
+        </div>
+      </div>
     </footer>
   </div>
 
-  <div id="firebase-modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
-    <div class="modal-backdrop" id="modal-backdrop"></div>
-    <div class="modal-content">
-      <h2 id="modal-title" class="modal-title">Firebase API 키</h2>
-      <p class="modal-desc">Firebase 콘솔에서 발급한 API 키를 입력하세요. 저장 시 다음부터 적용됩니다.</p>
-      <form id="firebase-form" class="firebase-form">
-        <label for="firebase-apikey" class="firebase-label">API Key</label>
-        <input type="password" id="firebase-apikey" class="firebase-input" placeholder="AIzaSy..." autocomplete="off">
-        <div class="modal-actions">
-          <button type="button" id="modal-close" class="btn-cancel">취소</button>
-          <button type="submit" class="btn-save-modal">저장</button>
-        </div>
-      </form>
-    </div>
+  <div id="summary-overlay" class="story-overlay" aria-hidden="true">
+    <div class="story-backdrop"></div>
+    <section class="story-card" aria-label="오늘의 요약 카드">
+      <header class="story-header">
+        <span class="story-pill">오늘의 요약</span>
+        <span class="story-logo">LIST</span>
+      </header>
+      <main class="story-main">
+        <p class="story-caption">오늘 민준님이 획득한</p>
+        <p class="story-focus-line">
+          <span id="story-minutes" class="story-minutes">0</span>
+          <span class="story-minutes-unit">분</span>
+        </p>
+        <p class="story-sub">
+          집중 시간과 함께<br>
+          <span id="story-completed-count">0개의 할 일</span>을 마쳤어요.
+        </p>
+      </main>
+      <footer class="story-footer">
+        <span class="story-tagline">“하루를 쌓아 레벨업 중”</span>
+        <span class="story-handle">@LIST · FOCUS MODE</span>
+      </footer>
+    </section>
   </div>
 
   <script type="module" src="main.js"></script>
